@@ -38,9 +38,10 @@ class MainActivity : AppCompatActivity() {
         binding.content.rd1.tag = URL_GLIDE
         binding.content.rd2.tag = URL_LOAD_APP
         binding.content.rd3.tag = URL_RETROFIT
-        
+
         binding.content.customButton.setOnClickListener {
             if (selectedDownloadOption != null) {
+                binding.content.customButton.setLoading()
                 download(url = selectedDownloadOption!!)
             } else {
                 Toast.makeText(this, R.string.select_download, Toast.LENGTH_LONG).show()
