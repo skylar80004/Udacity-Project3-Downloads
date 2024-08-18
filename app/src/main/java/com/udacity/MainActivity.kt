@@ -9,6 +9,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
 
+    private var selectedDownloadOption: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -31,21 +35,38 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        // TODO: Implement code below
-//        binding.custom_button.setOnClickListener {
-//            download()
-//        }
+        binding.content.rd1.tag = URL_GLIDE
+        binding.content.rd2.tag = URL_LOAD_APP
+        binding.content.rd3.tag = URL_RETROFIT
+        
+        binding.content.customButton.setOnClickListener {
+            if (selectedDownloadOption != null) {
+                download(url = selectedDownloadOption!!)
+            } else {
+                Toast.makeText(this, R.string.select_download, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.content.rgDownloadOptions.setOnCheckedChangeListener { _, i ->
+            val selectedRadioButton = binding.root.findViewById<RadioButton>(i)
+            val selectedValue = selectedRadioButton.tag.toString()
+            selectedDownloadOption = selectedValue
+        }
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+            if (downloadID == id) {
+                Toast.makeText(context, context?.getString(R.string.download_complete) ?: "", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
-    private fun download() {
+    private fun download(url: String) {
         val request =
-            DownloadManager.Request(Uri.parse(URL))
+            DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
@@ -61,5 +82,10 @@ class MainActivity : AppCompatActivity() {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
+
+
+        private const val URL_GLIDE = "https://github.com/bumptech/glide"
+        private const val URL_LOAD_APP = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
+        private const val URL_RETROFIT = "https://github.com/square/retrofit"
     }
 }

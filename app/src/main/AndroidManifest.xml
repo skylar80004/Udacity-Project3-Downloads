@@ -26,4 +26,7 @@
             android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
