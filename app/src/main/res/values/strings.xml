@@ -18,4 +18,6 @@
     <string name="download">Download</string>
     <string name="download_complete">Download complete</string>
     <string name="select_download">Please select the file to download</string>
+
+    <string name="notification_channel">Udacity Notifications</string>
 </resources>
