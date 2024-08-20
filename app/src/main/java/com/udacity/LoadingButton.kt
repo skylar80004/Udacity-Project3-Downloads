@@ -4,11 +4,9 @@ import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
 import androidx.core.content.ContextCompat
 import kotlin.properties.Delegates
 
@@ -20,8 +18,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private var valueAnimator = ValueAnimator()
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
-
+    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { p, old, new ->
         if (new == ButtonState.Loading) {
             startLoadingAnimation()
         }
@@ -98,20 +95,17 @@ class LoadingButton @JvmOverloads constructor(
                 val textY = height / 2 - (textPaint.descent() + textPaint.ascent()) / 2
                 canvas?.drawText(loadingText, textX, textY, textPaint)
 
-                // Calculate arc position and size
-                val arcRadius = dpToPx(16f) // Radius of the arc (16dp)
-                val arcMargin = dpToPx(8f) // Margin between text and arc (8dp)
+                // Arc / circle
+                val arcRadius = dpToPx(16f)
+                val arcMargin = dpToPx(8f)
 
-                // Calculate the width of the text
                 val textWidth = textPaint.measureText(loadingText)
 
-                // Position the arc right next to the text with margin
                 val arcLeft = textX + textWidth / 2 + arcMargin
                 val arcTop = height / 2 - arcRadius
                 val arcRight = arcLeft + 2 * arcRadius
                 val arcBottom = arcTop + 2 * arcRadius
 
-                // Draw the arc
                 canvas?.drawArc(arcLeft, arcTop, arcRight, arcBottom, -90f, circleAnimatedValue, true, circlePaint)
 
                 // Check if animation is complete
@@ -151,9 +145,7 @@ class LoadingButton @JvmOverloads constructor(
         setMeasuredDimension(w, h)
     }
 
-    private fun dpToPx(dp: Float): Float {
-        return dp * context.resources.displayMetrics.density
-    }
+    private fun dpToPx(dp: Float): Float = dp * context.resources.displayMetrics.density
 
     fun setLoading() {
         buttonState = ButtonState.Loading
