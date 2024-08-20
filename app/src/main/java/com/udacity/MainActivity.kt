@@ -69,16 +69,31 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             if (downloadID == id) {
-                Toast.makeText(
-                    context,
-                    context?.getString(R.string.download_complete) ?: "",
-                    Toast.LENGTH_LONG
-                ).show()
-                sendNotification()
+                val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val query = DownloadManager.Query().setFilterById(id)
+                val cursor = downloadManager.query(query)
+
+                if (cursor.moveToFirst()) {
+                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+
+                    when (status) {
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.download_complete),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            sendNotification(status = DownloadStatus.SUCCESS)
+                        }
+                        DownloadManager.STATUS_FAILED -> {
+                            sendNotification(status = DownloadStatus.FAIL)
+                        }
+                    }
+                }
+                cursor.close()
             }
         }
     }
-
 
     private fun createChannel(channelId: String, channelName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -97,20 +112,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendNotification() {
+    private fun sendNotification(status: DownloadStatus) {
         val intent = Intent(this, DetailActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(DOWNLOAD_NAME, selectedDownloadOption)
+            putExtra(DOWNLOAD_STATUS, status.value)
         }
 
         val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_assistant_black_24dp) // replace with your app icon
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_description))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .addAction(0, getString(R.string.notification_button), pendingIntent)
             .build()
@@ -142,6 +158,7 @@ class MainActivity : AppCompatActivity() {
         private const val URL_LOAD_APP =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
         private const val URL_RETROFIT = "https://github.com/square/retrofit"
-
+        const val DOWNLOAD_NAME = "downloadName"
+        const val DOWNLOAD_STATUS = "downloadStatus"
     }
 }
