@@ -20,4 +20,7 @@
     <string name="select_download">Please select the file to download</string>
 
     <string name="notification_channel">Udacity Notifications</string>
+    <string name="file_name">File name:</string>
+    <string name="status">Status:</string>
+    <string name="ok">Ok</string>
 </resources>
