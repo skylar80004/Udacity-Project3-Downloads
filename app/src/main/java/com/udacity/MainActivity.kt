@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity() {
             .setContentText(getString(R.string.notification_description))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
+            .setOngoing(false)
             .addAction(0, getString(R.string.notification_button), pendingIntent)
             .build()
 
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
-        private const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 1
         private const val URL_GLIDE = "https://github.com/bumptech/glide"
         private const val URL_LOAD_APP =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"

@@ -1,8 +1,11 @@
 package com.udacity
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.udacity.MainActivity.Companion.NOTIFICATION_ID
 import com.udacity.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
@@ -14,6 +17,9 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        val notificationManager = ContextCompat.getSystemService(this, NotificationManager::class.java) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID)
 
         val downloadName = intent.getStringExtra(MainActivity.DOWNLOAD_NAME)
         val downloadStatus = intent.getStringExtra(MainActivity.DOWNLOAD_STATUS)
@@ -33,7 +39,7 @@ class DetailActivity : AppCompatActivity() {
 
         binding.contentDetail.mlDetailActivity.postDelayed({
             binding.contentDetail.mlDetailActivity.transitionToEnd()
-        }, 500) //
+        }, 500)
     }
 
 
