@@ -30,5 +30,11 @@ class DetailActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        binding.contentDetail.mlDetailActivity.postDelayed({
+            binding.contentDetail.mlDetailActivity.transitionToEnd()
+        }, 500) //
     }
+
+
 }
