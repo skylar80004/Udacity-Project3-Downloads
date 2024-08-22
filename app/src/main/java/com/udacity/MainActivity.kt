@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -57,6 +58,12 @@ class MainActivity : AppCompatActivity() {
             val selectedValue = selectedRadioButton.tag.toString()
             selectedDownloadOption = selectedValue
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
+            }
+        }
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -99,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             )
             notificationChannel.enableLights(true)
             notificationChannel.enableVibration(true)
+            notificationChannel.description = getString(R.string.channel_description)
 
             val notificationManager = getSystemService(
                 NotificationManager::class.java
@@ -121,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             .setSmallIcon(R.drawable.ic_assistant_black_24dp) // replace with your app icon
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_description))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setOngoing(false)
             .addAction(0, getString(R.string.notification_button), pendingIntent)
