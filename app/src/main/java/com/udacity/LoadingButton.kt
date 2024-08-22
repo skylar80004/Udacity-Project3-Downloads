@@ -204,7 +204,12 @@ class LoadingButton @JvmOverloads constructor(
                 circleAnimatedValue = (animation.getAnimatedValue("circle") as? Float) ?: 0f
                 invalidate()
             }
+            repeatCount = ValueAnimator.INFINITE
         }
         valueAnimator.start()
+    }
+
+    fun stopLoadingAnimation() {
+        valueAnimator.cancel()
     }
 }

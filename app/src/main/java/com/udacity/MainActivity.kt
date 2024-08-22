@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             if (downloadID == id) {
                 context?.let {
+                    stopLoadingAnimation()
                     Toast.makeText(
                         context,
                         context.getString(R.string.download_complete),
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity() {
                     sendNotification(status = DownloadStatus.SUCCESS)
                 }
 
-//
 //                val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 //                val query = DownloadManager.Query().setFilterById(id)
 //                val cursor = downloadManager.query(query)
@@ -147,6 +147,10 @@ class MainActivity : AppCompatActivity() {
 
         val notificationManager = ContextCompat.getSystemService(this, NotificationManager::class.java) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun stopLoadingAnimation() {
+        binding.content.customButton.stopLoadingAnimation()
     }
 
     private fun download(url: String) {
