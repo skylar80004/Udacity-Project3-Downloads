@@ -71,28 +71,38 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             if (downloadID == id) {
-                val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                val query = DownloadManager.Query().setFilterById(id)
-                val cursor = downloadManager.query(query)
-
-                if (cursor.moveToFirst()) {
-                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-
-                    when (status) {
-                        DownloadManager.STATUS_SUCCESSFUL -> {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.download_complete),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            sendNotification(status = DownloadStatus.SUCCESS)
-                        }
-                        DownloadManager.STATUS_FAILED -> {
-                            sendNotification(status = DownloadStatus.FAIL)
-                        }
-                    }
+                context?.let {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.download_complete),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    sendNotification(status = DownloadStatus.SUCCESS)
                 }
-                cursor.close()
+
+//
+//                val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+//                val query = DownloadManager.Query().setFilterById(id)
+//                val cursor = downloadManager.query(query)
+//
+//                if (cursor.moveToFirst()) {
+//                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+//
+//                    when (status) {
+//                        DownloadManager.STATUS_SUCCESSFUL -> {
+//                            Toast.makeText(
+//                                context,
+//                                context.getString(R.string.download_complete),
+//                                Toast.LENGTH_LONG
+//                            ).show()
+//                            sendNotification(status = DownloadStatus.SUCCESS)
+//                        }
+//                        DownloadManager.STATUS_FAILED -> {
+//                            sendNotification(status = DownloadStatus.FAIL)
+//                        }
+//                    }
+//                }
+//                cursor.close()
             }
         }
     }
