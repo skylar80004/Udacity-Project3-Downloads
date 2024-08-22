@@ -22,5 +22,6 @@
     <string name="notification_channel">Udacity Notifications</string>
     <string name="file_name">File name:</string>
     <string name="status">Status:</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="loading">We are loading</string>
 </resources>

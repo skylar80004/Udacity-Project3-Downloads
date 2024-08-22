@@ -30,42 +30,73 @@ class LoadingButton @JvmOverloads constructor(
     private val colorWhite = ContextCompat.getColor(context, R.color.white)
     private val colorAccent = ContextCompat.getColor(context, R.color.colorAccent)
 
-    private val paint = Paint().apply {
+    private var paint = Paint().apply {
         color = colorPrimary
         style = Paint.Style.FILL
     }
 
-    private val loadingBackgroundPaint = Paint().apply {
+    private var loadingBackgroundPaint = Paint().apply {
         color = colorPrimaryDark
         style = Paint.Style.FILL
     }
 
-    private val textPaint = Paint().apply {
+    private var textPaint = Paint().apply {
         color = colorWhite
         style = Paint.Style.FILL
         textSize = 50f
         textAlign = Paint.Align.CENTER
     }
 
-    private val circlePaint = Paint().apply {
+    private var circlePaint = Paint().apply {
         color = colorAccent
         style = Paint.Style.FILL
     }
 
-
     private var buttonText = ""
-    private var loadingText = "We are loading"
+    private var backgroundColor = colorPrimary
+    private var loadingColor = colorPrimaryDark
+    private var loadingText = ""
 
     private var backgroundAnimatedValue = 0f
     private var circleAnimatedValue = 0f
 
     init {
-        val attrsArray =
-            context.theme.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.text), 0, 0)
+        val attrsArray = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.LoadingButton, // Ensure this is the correct reference
+            0, 0
+        )
 
         try {
-            buttonText = attrsArray.getString(0) ?: ""
-        } catch (_: Exception) {
+            buttonText = attrsArray.getString(R.styleable.LoadingButton_buttonText) ?: ""
+            backgroundColor =
+                attrsArray.getColor(R.styleable.LoadingButton_color, colorPrimary)
+            loadingColor = attrsArray.getColor(R.styleable.LoadingButton_loadingColor, loadingColor)
+            loadingText = context.getString(R.string.loading)
+
+            paint = Paint().apply {
+                color = colorPrimary
+                style = Paint.Style.FILL
+            }
+
+            loadingBackgroundPaint = Paint().apply {
+                color = colorPrimaryDark
+                style = Paint.Style.FILL
+            }
+
+            textPaint = Paint().apply {
+                color = colorWhite
+                style = Paint.Style.FILL
+                textSize = 50f
+                textAlign = Paint.Align.CENTER
+            }
+
+            circlePaint = Paint().apply {
+                color = colorAccent
+                style = Paint.Style.FILL
+            }
+        } finally {
+            attrsArray.recycle()
         }
 
         isClickable = true
@@ -106,7 +137,16 @@ class LoadingButton @JvmOverloads constructor(
                 val arcRight = arcLeft + 2 * arcRadius
                 val arcBottom = arcTop + 2 * arcRadius
 
-                canvas?.drawArc(arcLeft, arcTop, arcRight, arcBottom, -90f, circleAnimatedValue, true, circlePaint)
+                canvas?.drawArc(
+                    arcLeft,
+                    arcTop,
+                    arcRight,
+                    arcBottom,
+                    -90f,
+                    circleAnimatedValue,
+                    true,
+                    circlePaint
+                )
 
                 // Check if animation is complete
                 if (circleAnimatedValue == 360f && backgroundAnimatedValue == width) {
