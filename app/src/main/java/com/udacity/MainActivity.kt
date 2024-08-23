@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopLoadingAnimation() {
-        binding.content.customButton.stopLoadingAnimation()
+        binding.content.customButton.setCompletedState()
     }
 
     private fun download(url: String) {

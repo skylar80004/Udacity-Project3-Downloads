@@ -209,7 +209,7 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator.start()
     }
 
-    fun stopLoadingAnimation() {
-        valueAnimator.cancel()
+    fun setCompletedState() {
+        buttonState = ButtonState.Completed
     }
 }
